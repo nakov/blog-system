@@ -1,0 +1,251 @@
+.page {
+  min-height: 100vh;
+  padding: 28px 16px 56px;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(255, 218, 181, 0.55), transparent 34%),
+    radial-gradient(circle at 90% 5%, rgba(180, 244, 224, 0.5), transparent 30%),
+    linear-gradient(130deg, #faf6ec 0%, #eff8f8 52%, #f9f4ee 100%);
+  color: #102127;
+}
+
+.shell {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.blog-nav {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "brand links"
+    "user user";
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(16, 33, 39, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+}
+
+.blog-nav__brand {
+  grid-area: brand;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.blog-nav__links {
+  grid-area: links;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.blog-nav__link,
+.blog-nav__logout {
+  border: 0;
+  background: transparent;
+  color: #16343d;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: all 180ms ease;
+  cursor: pointer;
+}
+
+.blog-nav__link:hover,
+.blog-nav__logout:hover {
+  background: #16343d;
+  color: #f9f7f2;
+}
+
+.blog-nav__linkActive {
+  background: #16343d;
+  color: #f9f7f2;
+}
+
+.blog-nav__user {
+  grid-area: user;
+  font-size: 0.9rem;
+  color: #39555d;
+}
+
+.panel {
+  border: 1px solid rgba(16, 33, 39, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 24px;
+  box-shadow: 0 14px 30px rgba(19, 49, 58, 0.08);
+}
+
+.title {
+  font-size: clamp(1.7rem, 1.4rem + 1.2vw, 2.3rem);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  color: #36545d;
+  max-width: 70ch;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.card {
+  border: 1px solid rgba(16, 33, 39, 0.12);
+  border-radius: 14px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.84);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardMeta {
+  font-size: 0.86rem;
+  color: #3b5860;
+}
+
+.cardTitle {
+  font-size: 1.22rem;
+}
+
+.cardText {
+  color: #294149;
+  line-height: 1.6;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  border: 1px solid #27515d;
+  color: #16343d;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.button,
+.buttonGhost,
+.buttonDanger {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 140ms ease, background-color 140ms ease, color 140ms ease,
+    border-color 140ms ease;
+}
+
+.button {
+  background: #16343d;
+  color: #f9f7f2;
+}
+
+.buttonGhost {
+  background: transparent;
+  border-color: #16343d;
+  color: #16343d;
+}
+
+.buttonDanger {
+  background: #a33b2f;
+  color: #fff8f5;
+}
+
+.button:hover,
+.buttonGhost:hover,
+.buttonDanger:hover {
+  transform: translateY(-1px);
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+.label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #173841;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid rgba(16, 33, 39, 0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #13262d;
+}
+
+.textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.error {
+  color: #8f1f10;
+  font-weight: 600;
+}
+
+.success {
+  color: #145d35;
+  font-weight: 600;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.authPanel {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-nav {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "brand"
+      "links"
+      "user";
+  }
+
+  .blog-nav__links {
+    justify-content: flex-start;
+  }
+}
