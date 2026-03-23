@@ -28,7 +28,7 @@ function shorten(text: string): string {
   return `${text.slice(0, 190).trimEnd()}...`;
 }
 
-function formatDate(dateText: string): string {
+function formatDate(dateText: string | Date): string {
   return new Date(dateText).toLocaleString();
 }
 

@@ -36,7 +36,7 @@ function parseTags(raw: string): string[] {
   );
 }
 
-function formatDate(dateText: string): string {
+function formatDate(dateText: string | Date): string {
   return new Date(dateText).toLocaleString();
 }
 

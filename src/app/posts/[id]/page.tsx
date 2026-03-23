@@ -16,7 +16,7 @@ function parsePostId(value: string): number | null {
   return parsed;
 }
 
-function formatDate(dateText: string): string {
+function formatDate(dateText: string | Date): string {
   return new Date(dateText).toLocaleString();
 }
 
