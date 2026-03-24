@@ -88,9 +88,32 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `npm run build` | Build the application for production |
 | `npm start` | Run the production build |
 | `npm run lint` | Run ESLint |
+| `npm run test` | Run API unit tests in watch mode (Vitest) |
+| `npm run test:run` | Run API unit tests once (Vitest) |
+| `npm run test:integration` | Run integration tests in watch mode (Vitest) |
+| `npm run test:integration:run` | Run integration tests once (Vitest) |
+| `npm run test:web:install` | Install Chromium for Playwright |
+| `npm run test:web` | Run browser-based web tests (Playwright) |
+| `npm run test:web:ui` | Run Playwright with the interactive UI |
 | `npm run drizzle:generate` | Generate Drizzle migration files from schema changes |
 | `npm run drizzle:migrate` | Apply pending migrations to the database |
 | `npm run db:seed` | Seed the database with sample users and posts |
+
+## Web Testing (Playwright)
+
+Install browser binaries the first time:
+
+```bash
+npm run test:web:install
+```
+
+Run the browser test suite:
+
+```bash
+npm run test:web
+```
+
+The Playwright config automatically starts the Next.js app and runs tests under `tests/web`.
 
 ## API Endpoints
 

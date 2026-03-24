@@ -7,6 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:integration": "vitest --config vitest.integration.config.mts",
+    "test:integration:run": "vitest run --config vitest.integration.config.mts",
+    "test:web": "playwright test",
+    "test:web:ui": "playwright test --ui",
+    "test:web:install": "playwright install chromium",
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.ts"
@@ -24,6 +31,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -31,6 +39,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.0",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.0"
   }
 }
