@@ -113,6 +113,27 @@
   gap: 10px;
 }
 
+.coverImage {
+  display: block;
+  width: 100%;
+  height: clamp(170px, 24vw, 260px);
+  object-fit: cover;
+  object-position: center;
+  border-radius: 10px;
+  border: 1px solid rgba(16, 33, 39, 0.1);
+}
+
+.coverPreview {
+  display: block;
+  width: min(360px, 100%);
+  height: clamp(160px, 28vw, 220px);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 10px;
+  border: 1px solid rgba(16, 33, 39, 0.18);
+}
+
 .cardMeta {
   font-size: 0.86rem;
   color: #3b5860;
@@ -235,6 +256,15 @@
 @media (max-width: 860px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .coverImage {
+    height: clamp(180px, 48vw, 250px);
+  }
+
+  .coverPreview {
+    width: 100%;
+    height: clamp(180px, 52vw, 250px);
   }
 
   .blog-nav {

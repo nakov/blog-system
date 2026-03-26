@@ -8,6 +8,13 @@
       "when": 1774024831090,
       "tag": "0000_chubby_dracula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1774449368953,
+      "tag": "0001_regular_clint_barton",
+      "breakpoints": true
     }
   ]
 }

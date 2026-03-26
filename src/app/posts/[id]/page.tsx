@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BlogNav } from "@/components/BlogNav";
 import { getDb } from "@/db";
 import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { toPublicCoverImageUrl } from "@/lib/r2";
 import styles from "@/app/app.module.css";
 
 export const revalidate = 60;
@@ -37,6 +39,7 @@ export default async function PostDetailsPage({
     .select({
       id: posts.id,
       title: posts.title,
+      coverImageUrl: posts.coverImageUrl,
       text: posts.text,
       tags: posts.tags,
       publishedAt: posts.publishedAt,
@@ -53,6 +56,8 @@ export default async function PostDetailsPage({
     notFound();
   }
 
+  const normalizedCoverImageUrl = toPublicCoverImageUrl(post.coverImageUrl);
+
   return (
     <div className={styles.page}>
       <main className={styles.shell}>
@@ -60,6 +65,15 @@ export default async function PostDetailsPage({
 
         <section className={styles.panel}>
           <article className={styles.card}>
+            {normalizedCoverImageUrl ? (
+              <Image
+                src={normalizedCoverImageUrl}
+                alt={`Cover image for ${post.title}`}
+                className={styles.coverImage}
+                width={1280}
+                height={720}
+              />
+            ) : null}
             <p className={styles.cardMeta}>
               By {post.authorEmail} | {formatDate(post.publishedAt)}
             </p>

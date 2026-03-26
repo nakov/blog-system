@@ -1,8 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { BlogNav } from "@/components/BlogNav";
 import { getDb } from "@/db";
 import { posts, users } from "@/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
+import { toPublicCoverImageUrl } from "@/lib/r2";
 import styles from "./app.module.css";
 
 const PAGE_SIZE = 6;
@@ -49,10 +51,11 @@ export default async function Home({
   const total = Number(countResult[0]?.total ?? 0);
   const pageCount = total === 0 ? 1 : Math.ceil(total / PAGE_SIZE);
 
-  const pagedPosts = await db
+  const rawPagedPosts = await db
     .select({
       id: posts.id,
       title: posts.title,
+      coverImageUrl: posts.coverImageUrl,
       text: posts.text,
       tags: posts.tags,
       publishedAt: posts.publishedAt,
@@ -64,6 +67,11 @@ export default async function Home({
     .orderBy(desc(posts.publishedAt))
     .limit(PAGE_SIZE)
     .offset(offset);
+
+  const pagedPosts = rawPagedPosts.map((post) => ({
+    ...post,
+    coverImageUrl: toPublicCoverImageUrl(post.coverImageUrl),
+  }));
 
   const previousPageHref = page <= 2 ? "/" : `/?page=${page - 1}`;
   const nextPageHref = `/?page=${page + 1}`;
@@ -87,6 +95,15 @@ export default async function Home({
               <div className={styles.grid}>
                 {pagedPosts.map((post) => (
                   <article key={post.id} className={styles.card}>
+                    {post.coverImageUrl ? (
+                      <Image
+                        src={post.coverImageUrl}
+                        alt={`Cover image for ${post.title}`}
+                        className={styles.coverImage}
+                        width={1280}
+                        height={720}
+                      />
+                    ) : null}
                     <p className={styles.cardMeta}>
                       By {post.authorEmail} | {formatDate(post.publishedAt)}
                     </p>

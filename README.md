@@ -43,6 +43,11 @@ Create a `.env` file in the project root:
 DATABASE_URL=postgresql://user:password@localhost:5432/neondb
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
+R2_URL=https://<account-id>.r2.cloudflarestorage.com
+R2_ACCESS_KEY_ID=your-r2-access-key-id
+R2_SECRET_ACCESS_KEY=your-r2-secret-access-key
+R2_BUCKET=blog-covers
+R2_PUBLIC_URL=https://pub-xxxxxxxx.r2.dev
 ```
 
 | Variable | Description | Default |
@@ -50,6 +55,11 @@ JWT_EXPIRES_IN=7d
 | `DATABASE_URL` | PostgreSQL connection string (required) | — |
 | `JWT_SECRET` | Secret used to sign JWT tokens (required) | — |
 | `JWT_EXPIRES_IN` | JWT token lifetime | `7d` |
+| `R2_URL` | Cloudflare R2 account endpoint | — |
+| `R2_ACCESS_KEY_ID` | R2 S3 access key id (recommended) | — |
+| `R2_SECRET_ACCESS_KEY` | R2 S3 secret access key (recommended) | — |
+| `R2_BUCKET` | R2 bucket name that stores post cover images | — |
+| `R2_PUBLIC_URL` | Public base URL used to build cover image URLs (for example `https://pub-xxxx.r2.dev`) | — |
 
 ### 3. Run database migrations
 
@@ -124,6 +134,7 @@ The Playwright config automatically starts the Next.js app and runs tests under 
 | `GET` | `/api/posts` | No | List posts (supports `page`, `limit`, `tag` query params) |
 | `GET` | `/api/posts/[id]` | No | Get a single post by ID |
 | `POST` | `/api/posts` | Yes | Create a new post |
+| `POST` | `/api/posts/upload-image` | Yes | Upload a cover image to Cloudflare R2 |
 | `PUT` | `/api/posts/[id]` | Yes | Update your own post |
 | `DELETE` | `/api/posts/[id]` | Yes | Delete your own post |
 

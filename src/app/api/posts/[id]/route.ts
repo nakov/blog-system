@@ -4,6 +4,7 @@ import { getDb } from "@/db";
 import { posts, users } from "@/db/schema";
 import { getRequestUser } from "@/lib/auth";
 import { jsonError } from "@/lib/http";
+import { toPublicCoverImageUrl } from "@/lib/r2";
 import { updatePostSchema } from "@/lib/validators";
 
 function parseId(idParam: string): number | null {
@@ -31,6 +32,7 @@ export async function GET(
       .select({
         id: posts.id,
         title: posts.title,
+        coverImageUrl: posts.coverImageUrl,
         text: posts.text,
         tags: posts.tags,
         publishedAt: posts.publishedAt,
@@ -47,7 +49,12 @@ export async function GET(
       return jsonError("Post not found.", 404);
     }
 
-    return NextResponse.json({ post });
+    return NextResponse.json({
+      post: {
+        ...post,
+        coverImageUrl: toPublicCoverImageUrl(post.coverImageUrl),
+      },
+    });
   } catch {
     return jsonError("Failed to fetch post.", 500);
   }

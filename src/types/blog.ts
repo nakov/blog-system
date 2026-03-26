@@ -7,6 +7,7 @@ export type ApiUser = {
 export type ApiPost = {
   id: number;
   title: string;
+  coverImageUrl: string | null;
   text: string;
   tags: string[];
   publishedAt: string;
@@ -23,6 +24,7 @@ export type CreatePostInput = {
   title: string;
   text: string;
   tags: string[];
+  coverImageUrl?: string | null;
 };
 
 export type UpdatePostInput = Partial<CreatePostInput>;

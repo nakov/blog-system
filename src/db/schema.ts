@@ -31,6 +31,7 @@ export const posts = pgTable("posts", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   title: varchar("title", { length: 180 }).notNull(),
+  coverImageUrl: text("cover_image_url"),
   text: text("text").notNull(),
   tags: text("tags").array().notNull().default(sql`'{}'::text[]`),
   publishedAt: timestamp("published_at", { withTimezone: true })

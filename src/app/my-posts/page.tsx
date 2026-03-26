@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { FormEvent, useEffect, useState } from "react";
 import { BlogNav } from "@/components/BlogNav";
 import {
   createPost,
   deletePost,
   fetchPosts,
+  uploadPostCoverImage,
   updatePost,
 } from "@/lib/api-client";
 import { getClientSession } from "@/lib/client-auth";
@@ -17,12 +19,14 @@ type PostFormValues = {
   title: string;
   text: string;
   tags: string;
+  coverImageUrl: string;
 };
 
 const initialFormValues: PostFormValues = {
   title: "",
   text: "",
   tags: "",
+  coverImageUrl: "",
 };
 
 function parseTags(raw: string): string[] {
@@ -45,6 +49,7 @@ export default function MyPostsPage() {
   const [posts, setPosts] = useState<ApiPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMutating, setIsMutating] = useState(false);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -86,6 +91,41 @@ export default function MyPostsPage() {
     setPosts(nextPosts);
   };
 
+  const uploadCover = async (
+    file: File,
+    mode: "create" | "edit"
+  ): Promise<void> => {
+    if (!session) {
+      return;
+    }
+
+    try {
+      setIsUploadingCover(true);
+      setError("");
+      setSuccess("");
+
+      const url = await uploadPostCoverImage(file, session.token);
+
+      if (mode === "create") {
+        setCreateValues((value) => ({
+          ...value,
+          coverImageUrl: url,
+        }));
+      } else {
+        setEditValues((value) => ({
+          ...value,
+          coverImageUrl: url,
+        }));
+      }
+
+      setSuccess("Cover image uploaded.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload image.");
+    } finally {
+      setIsUploadingCover(false);
+    }
+  };
+
   const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -103,6 +143,7 @@ export default function MyPostsPage() {
           title: createValues.title,
           text: createValues.text,
           tags: parseTags(createValues.tags),
+          coverImageUrl: createValues.coverImageUrl || null,
         },
         session.token
       );
@@ -123,6 +164,7 @@ export default function MyPostsPage() {
       title: post.title,
       text: post.text,
       tags: post.tags.join(", "),
+      coverImageUrl: post.coverImageUrl ?? "",
     });
     setError("");
     setSuccess("");
@@ -151,6 +193,7 @@ export default function MyPostsPage() {
           title: editValues.title,
           text: editValues.text,
           tags: parseTags(editValues.tags),
+          coverImageUrl: editValues.coverImageUrl || null,
         },
         session.token
       );
@@ -265,8 +308,40 @@ export default function MyPostsPage() {
                   placeholder="react, nextjs, testing"
                 />
 
+                <label className={styles.label} htmlFor="create-cover-upload">
+                  Cover image
+                </label>
+                <input
+                  id="create-cover-upload"
+                  className={styles.input}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  disabled={isMutating || isUploadingCover}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) {
+                      void uploadCover(file, "create");
+                    }
+                    event.target.value = "";
+                  }}
+                />
+
+                {createValues.coverImageUrl ? (
+                  <Image
+                    src={createValues.coverImageUrl}
+                    alt="Selected cover preview"
+                    className={styles.coverPreview}
+                    width={1280}
+                    height={720}
+                  />
+                ) : null}
+
                 <div className={styles.actions}>
-                  <button className={styles.button} disabled={isMutating} type="submit">
+                  <button
+                    className={styles.button}
+                    disabled={isMutating || isUploadingCover}
+                    type="submit"
+                  >
                     {isMutating ? "Saving..." : "Create post"}
                   </button>
                 </div>
@@ -281,6 +356,15 @@ export default function MyPostsPage() {
               <div className={styles.grid}>
                 {posts.map((post) => (
                   <article key={post.id} className={styles.card}>
+                    {post.coverImageUrl ? (
+                      <Image
+                        src={post.coverImageUrl}
+                        alt={`Cover image for ${post.title}`}
+                        className={styles.coverImage}
+                        width={1280}
+                        height={720}
+                      />
+                    ) : null}
                     <p className={styles.cardMeta}>{formatDate(post.publishedAt)}</p>
                     <h2 className={styles.cardTitle}>{post.title}</h2>
                     <p className={styles.cardText}>{post.text.slice(0, 180)}...</p>
@@ -372,15 +456,62 @@ export default function MyPostsPage() {
                     }
                   />
 
+                  <label className={styles.label} htmlFor="edit-cover-upload">
+                    Cover image
+                  </label>
+                  <input
+                    id="edit-cover-upload"
+                    className={styles.input}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    disabled={isMutating || isUploadingCover}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        void uploadCover(file, "edit");
+                      }
+                      event.target.value = "";
+                    }}
+                  />
+
+                  <label className={styles.label} htmlFor="edit-cover-url">
+                    Cover image URL
+                  </label>
+                  <input
+                    id="edit-cover-url"
+                    className={styles.input}
+                    value={editValues.coverImageUrl}
+                    onChange={(event) =>
+                      setEditValues((value) => ({
+                        ...value,
+                        coverImageUrl: event.target.value,
+                      }))
+                    }
+                  />
+
+                  {editValues.coverImageUrl ? (
+                    <Image
+                      src={editValues.coverImageUrl}
+                      alt="Editing cover preview"
+                      className={styles.coverPreview}
+                      width={1280}
+                      height={720}
+                    />
+                  ) : null}
+
                   <div className={styles.actions}>
-                    <button type="submit" className={styles.button} disabled={isMutating}>
+                    <button
+                      type="submit"
+                      className={styles.button}
+                      disabled={isMutating || isUploadingCover}
+                    >
                       {isMutating ? "Updating..." : "Update post"}
                     </button>
                     <button
                       type="button"
                       className={styles.buttonGhost}
                       onClick={cancelEditing}
-                      disabled={isMutating}
+                      disabled={isMutating || isUploadingCover}
                     >
                       Cancel
                     </button>

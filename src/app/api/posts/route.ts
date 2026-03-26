@@ -4,6 +4,7 @@ import { getDb } from "@/db";
 import { posts, users } from "@/db/schema";
 import { getRequestUser } from "@/lib/auth";
 import { jsonError } from "@/lib/http";
+import { toPublicCoverImageUrl } from "@/lib/r2";
 import { createPostSchema } from "@/lib/validators";
 
 function parsePositiveInt(value: string | null, fallback: number): number {
@@ -59,6 +60,7 @@ export async function GET(request: NextRequest) {
       .select({
         id: posts.id,
         title: posts.title,
+        coverImageUrl: posts.coverImageUrl,
         text: posts.text,
         tags: posts.tags,
         publishedAt: posts.publishedAt,
@@ -72,8 +74,13 @@ export async function GET(request: NextRequest) {
       .limit(pageSize)
       .offset(offset);
 
+    const normalizedPosts = result.map((post) => ({
+      ...post,
+      coverImageUrl: toPublicCoverImageUrl(post.coverImageUrl),
+    }));
+
     return NextResponse.json({
-      posts: result,
+      posts: normalizedPosts,
       pagination: {
         page,
         pageSize,
@@ -103,7 +110,7 @@ export async function POST(request: NextRequest) {
       return jsonError(parsed.error.issues[0]?.message ?? "Invalid input.", 400);
     }
 
-    const { title, text, tags } = parsed.data;
+    const { title, text, tags, coverImageUrl } = parsed.data;
 
     const [newPost] = await db
       .insert(posts)
@@ -112,6 +119,7 @@ export async function POST(request: NextRequest) {
         title,
         text,
         tags,
+        coverImageUrl: coverImageUrl ?? null,
       })
       .returning();
 

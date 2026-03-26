@@ -121,3 +121,20 @@ export async function deletePost(id: number, token: string) {
     })
   );
 }
+
+export async function uploadPostCoverImage(file: File, token: string) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const data = await parseJson<{ url: string }>(
+    await fetch("/api/posts/upload-image", {
+      method: "POST",
+      headers: {
+        ...getAuthHeaders(token),
+      },
+      body: formData,
+    })
+  );
+
+  return data.url;
+}
